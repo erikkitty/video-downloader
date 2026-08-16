@@ -1,0 +1,82 @@
+@use '../../styles/mixins' as m;
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.input {
+  @include m.field;
+
+  flex: 1;
+  min-width: 200px;
+}
+
+.select {
+  @include m.field;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #eee;
+  cursor: pointer;
+
+  input {
+    cursor: pointer;
+  }
+}
+
+.button {
+  @include m.button;
+}
+
+.cancel {
+  background: #555;
+}
+
+.info {
+  @include m.panel;
+
+  line-height: 1.6;
+}
+
+.status {
+  padding: 0.75rem;
+  background: #2ea043;
+  border-radius: 4px;
+  color: #fff;
+  text-align: center;
+}
+
+.error {
+  padding: 0.75rem;
+  background: #c0392b;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.hint {
+  padding: 0.75rem;
+  background: #8a6d1a;
+  border-radius: 4px;
+  color: #fff;
+  line-height: 1.5;
+
+  p {
+    margin: 0 0 0.5rem;
+  }
+
+  button {
+    margin-right: 0.5rem;
+  }
+}

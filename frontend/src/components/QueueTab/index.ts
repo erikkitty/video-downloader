@@ -1,0 +1,1 @@
+export { QueueTab } from "./QueueTab";

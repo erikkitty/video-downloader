@@ -1,0 +1,80 @@
+@use "../../styles/mixins" as m;
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.row {
+  display: flex;
+  gap: 0.5rem;
+}
+.button {
+  @include m.button;
+}
+.secondary {
+  background: #555;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.item {
+  @include m.panel;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.itemHead {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #888;
+}
+.date {
+  color: #888;
+}
+.ok {
+  color: #2ea043;
+}
+.bad {
+  color: #c0392b;
+}
+.quality {
+  color: #eee;
+}
+.size {
+  color: #888;
+}
+.folderBtn {
+  @include m.button(#555);
+  padding: 0.15rem 0.5rem;
+  margin-left: auto;
+}
+.title {
+  color: #eee;
+  font-weight: 600;
+}
+.url {
+  color: #888;
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.path {
+  color: #666;
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.empty {
+  color: #888;
+}
