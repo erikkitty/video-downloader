@@ -1,55 +1,113 @@
-.app {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+@use "./styles/variables" as *;
+@use "./styles/glass" as g;
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: radial-gradient(1200px 800px at 70% 20%, #0d1512, $bg-base 65%);
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+  animation: drift 26s ease-in-out infinite alternate;
+}
+
+.blobGreen {
+  top: 30%;
+  left: 6%;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, #16a34a, transparent 70%);
+}
+
+.blobPurple {
+  top: 14%;
+  right: 5%;
+  width: 460px;
+  height: 460px;
+  background: radial-gradient(circle, #8b5cf6, transparent 70%);
+  animation-delay: -13s;
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(60px, -40px, 0) scale(1.15);
+  }
+}
+
+.panel {
+  @include g.glass;
+
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 6vh auto 8vh;
+  padding: 26px 32px 36px;
 }
 
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-
-  h1 {
-    margin: 0;
-    font-size: 1.5rem;
-  }
+  gap: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.status {
-  font-size: 0.875rem;
-  color: #888;
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .tabs {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid #444;
+  gap: 22px;
+  margin-left: auto;
 }
 
 .tab {
-  padding: 0.75rem 1.5rem;
-  background: none;
+  position: relative;
+  padding: 6px 2px;
   border: none;
-  color: #888;
-  font-size: 1rem;
+  background: none;
+  color: $text-muted;
+  font-size: 0.95rem;
   cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s;
+  transition: color 0.2s;
 
   &:hover {
-    color: #eee;
+    color: $text;
   }
 }
 
 .active {
-  color: #eee;
-  border-bottom-color: #2ea043;
+  color: $text;
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -17px;
+    left: 0;
+    height: 3px;
+    border-radius: 2px;
+    background: $accent;
+    box-shadow: 0 0 12px $accent;
+  }
 }
 
 .content {
-  background: #2b2b2b;
-  padding: 1.5rem;
-  border-radius: 8px;
+  margin-top: 26px;
 }

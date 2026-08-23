@@ -1,82 +1,166 @@
-@use '../../styles/mixins' as m;
+@use "../../styles/variables" as *;
+@use "../../styles/glass" as g;
 
 .tab {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 18px;
+}
+
+.urlRow {
+  display: flex;
+  gap: 10px;
+}
+
+.input {
+  @include g.field;
+
+  flex: 1;
+}
+
+.infoBtn {
+  @include g.pillButton;
+}
+
+.info {
+  @include g.innerPanel;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  line-height: 1.5;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
 }
 
 .row {
   display: flex;
-  gap: 0.5rem;
-  align-items: center;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
-.input {
-  @include m.field;
-
-  flex: 1;
-  min-width: 200px;
+.label {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $text-muted;
 }
 
-.select {
-  @include m.field;
-}
-
-.checkbox {
+.qualityRow {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #eee;
-  cursor: pointer;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 
-  input {
-    cursor: pointer;
+.pill {
+  padding: 8px 14px;
+  border-radius: $radius-pill;
+  border: 1px solid $glass-border;
+  background: rgba(255, 255, 255, 0.06);
+  color: $text-muted;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    color: $text;
+    border-color: rgba(255, 255, 255, 0.35);
   }
 }
 
-.button {
-  @include m.button;
+.pillActive {
+  background: linear-gradient(135deg, $accent, $accent-strong);
+  border-color: transparent;
+  color: #06210f;
+  font-weight: 600;
+  box-shadow: 0 0 18px rgba(74, 222, 128, 0.35);
 }
 
-.cancel {
-  background: #555;
+.select {
+  @include g.field;
+
+  width: 100%;
+  appearance: none;
+
+  option {
+    background: #101512;
+    color: $text;
+  }
 }
 
-.info {
-  @include m.panel;
+.downloadBtn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: $radius-pill;
+  background: linear-gradient(135deg, #86efac, $accent 45%, $accent-strong);
+  color: #052012;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 34px rgba(74, 222, 128, 0.35);
+  transition:
+    transform 0.15s,
+    box-shadow 0.2s;
 
-  line-height: 1.6;
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 40px rgba(74, 222, 128, 0.45);
+  }
+}
+
+.cancelBtn {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid $glass-border;
+  border-radius: $radius-pill;
+  background: rgba(255, 255, 255, 0.1);
+  color: $text;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .status {
-  padding: 0.75rem;
-  background: #2ea043;
-  border-radius: 4px;
-  color: #fff;
+  padding: 12px 16px;
+  border-radius: $radius-md;
+  border: 1px solid rgba(74, 222, 128, 0.5);
+  background: rgba(74, 222, 128, 0.12);
+  color: #bbf7d0;
   text-align: center;
 }
 
 .error {
-  padding: 0.75rem;
-  background: #c0392b;
-  border-radius: 4px;
-  color: #fff;
+  padding: 12px 16px;
+  border-radius: $radius-md;
+  border: 1px solid rgba(248, 113, 113, 0.5);
+  background: rgba(248, 113, 113, 0.12);
+  color: #fecaca;
 }
 
 .hint {
-  padding: 0.75rem;
-  background: #8a6d1a;
-  border-radius: 4px;
-  color: #fff;
-  line-height: 1.5;
+  padding: 12px 16px;
+  border-radius: $radius-md;
+  border: 1px solid rgba(250, 204, 21, 0.45);
+  background: rgba(250, 204, 21, 0.1);
+  color: #fef9c3;
 
   p {
-    margin: 0 0 0.5rem;
+    margin: 0 0 10px;
   }
 
   button {
-    margin-right: 0.5rem;
+    margin-right: 8px;
   }
+}
+
+.hintBtn {
+  @include g.pillButton;
 }

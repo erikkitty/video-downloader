@@ -1,54 +1,72 @@
-import { useState } from 'react';
-import axios from 'axios';
+import { useState } from "react";
+import axios from "axios";
 
 import {
   cancelDownload,
   getInfo,
   startDownload,
   updateSettings,
-} from '../../api';
-import type { ProgressEvent, StatusEvent, VideoInfo, WSEvent } from '../../types';
-import { ProgressBar } from '../ProgressBar';
-import styles from './DownloadTab.module.scss';
+} from "../../api";
+import type {
+  ProgressEvent,
+  StatusEvent,
+  VideoInfo,
+  WSEvent,
+} from "../../types";
+import { ProgressBar } from "../ProgressBar";
+import { Toggle } from "../Toggle";
+import styles from "./DownloadTab.module.scss";
 
-const QUALITY_VALUES = ['Максимальное', '2160p', '1440p', '1080p', '720p', '480p', '360p'];
-const CONTAINER_VALUES = ['mp4', 'mkv', 'original'];
+const QUALITY_VALUES = [
+  "Максимальное",
+  "2160p",
+  "1440p",
+  "1080p",
+  "720p",
+  "480p",
+  "360p",
+];
+const CONTAINER_VALUES = ["mp4", "mkv", "original"];
 
 interface DownloadTabProps {
   events: WSEvent[];
 }
 
 export const DownloadTab = ({ events }: DownloadTabProps) => {
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState("");
   const [info, setInfo] = useState<VideoInfo | null>(null);
-  const [quality, setQuality] = useState('Максимальное');
-  const [container, setContainer] = useState('mp4');
+  const [quality, setQuality] = useState("Максимальное");
+  const [container, setContainer] = useState("mp4");
   const [audioOnly, setAudioOnly] = useState(false);
-  const [filename, setFilename] = useState('');
-  const [formError, setFormError] = useState('');
+  const [filename, setFilename] = useState("");
+  const [formError, setFormError] = useState("");
   const [session, setSession] = useState({ started: false, baseline: 0 });
 
   const sessionEvents = events.slice(session.baseline);
-  const statusEvents = sessionEvents.filter((e): e is StatusEvent => e.type === 'status');
+  const statusEvents = sessionEvents.filter(
+    (e): e is StatusEvent => e.type === "status",
+  );
   const progressEvents = sessionEvents.filter(
-    (e): e is ProgressEvent => e.type === 'progress',
+    (e): e is ProgressEvent => e.type === "progress",
   );
   const lastStatus = statusEvents[statusEvents.length - 1];
   const lastProgress = progressEvents[progressEvents.length - 1];
 
   const busy = session.started && !lastStatus;
   const statusText =
-    lastStatus?.status === 'done'
-      ? '✔ Готово'
-      : lastStatus?.status === 'cancelled'
-        ? 'Отменено пользователем'
-        : '';
+    lastStatus?.status === "done"
+      ? "✔ Готово"
+      : lastStatus?.status === "cancelled"
+        ? "Отменено пользователем"
+        : "";
   const downloadError =
-    lastStatus?.status === 'error' ? (lastStatus.message || 'Ошибка скачивания') : '';
+    lastStatus?.status === "error"
+      ? lastStatus.message || "Ошибка скачивания"
+      : "";
   const error = formError || downloadError;
 
   const handleGetInfo = async () => {
-    setFormError('');
+    setFormError("");
     setInfo(null);
     try {
       const data = await getInfo(url);
@@ -60,13 +78,13 @@ export const DownloadTab = ({ events }: DownloadTabProps) => {
       setFormError(
         axios.isAxiosError(err)
           ? (err.response?.data?.detail ?? err.message)
-          : 'Ошибка получения информации',
+          : "Ошибка получения информации",
       );
     }
   };
 
   const handleDownload = async () => {
-    setFormError('');
+    setFormError("");
     setSession({ started: true, baseline: events.length });
     try {
       await startDownload({
@@ -81,7 +99,7 @@ export const DownloadTab = ({ events }: DownloadTabProps) => {
       setFormError(
         axios.isAxiosError(err)
           ? (err.response?.data?.detail ?? err.message)
-          : 'Ошибка запуска скачивания',
+          : "Ошибка запуска скачивания",
       );
     }
   };
@@ -90,7 +108,7 @@ export const DownloadTab = ({ events }: DownloadTabProps) => {
     try {
       await cancelDownload();
     } catch {
-      setFormError('Ошибка отмены');
+      setFormError("Ошибка отмены");
     }
   };
 
@@ -99,13 +117,13 @@ export const DownloadTab = ({ events }: DownloadTabProps) => {
       await updateSettings({ cookies_from_browser: browser });
       await handleGetInfo();
     } catch {
-      setFormError('Не удалось включить cookies');
+      setFormError("Не удалось включить cookies");
     }
   };
 
   return (
     <div className={styles.tab}>
-      <div className={styles.row}>
+      <div className={styles.urlRow}>
         <input
           type="text"
           value={url}
@@ -113,7 +131,7 @@ export const DownloadTab = ({ events }: DownloadTabProps) => {
           placeholder="https://..."
           className={styles.input}
         />
-        <button onClick={handleGetInfo} className={styles.button}>
+        <button onClick={handleGetInfo} className={styles.infoBtn}>
           Инфо
         </button>
       </div>
@@ -122,29 +140,31 @@ export const DownloadTab = ({ events }: DownloadTabProps) => {
         <div className={styles.info}>
           <div>📺 {info.title}</div>
           <div>
-            ⏱ {Math.floor((info.duration || 0) / 60)} мин {(info.duration || 0) % 60} сек
+            ⏱ {Math.floor((info.duration || 0) / 60)} мин{" "}
+            {(info.duration || 0) % 60} сек
           </div>
           <div>🎞 Доступно разрешений: {info.heights.length}</div>
         </div>
       )}
 
+      <div className={styles.section}>
+        <span className={styles.label}>Качество</span>
+        <div className={styles.qualityRow}>
+          {QUALITY_VALUES.map((q) => (
+            <button
+              key={q}
+              className={`${styles.pill} ${quality === q ? styles.pillActive : ""}`}
+              onClick={() => setQuality(q)}
+            >
+              {q}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className={styles.row}>
-        <label>
-          Качество:
-          <select
-            value={quality}
-            onChange={(e) => setQuality(e.target.value)}
-            className={styles.select}
-          >
-            {QUALITY_VALUES.map((q) => (
-              <option key={q} value={q}>
-                {q}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Контейнер:
+        <div className={styles.section}>
+          <span className={styles.label}>Контейнер</span>
           <select
             value={container}
             onChange={(e) => setContainer(e.target.value)}
@@ -156,38 +176,34 @@ export const DownloadTab = ({ events }: DownloadTabProps) => {
               </option>
             ))}
           </select>
-        </label>
-        <label className={styles.checkbox}>
-          <input
-            type="checkbox"
-            checked={audioOnly}
-            onChange={(e) => setAudioOnly(e.target.checked)}
-          />
-          Только звук (mp3)
-        </label>
+        </div>
+        <Toggle
+          checked={audioOnly}
+          onChange={setAudioOnly}
+          label="Только звук (mp3)"
+        />
       </div>
 
-      <div className={styles.row}>
+      <div className={styles.section}>
+        <span className={styles.label}>Имя файла</span>
         <input
           type="text"
           value={filename}
           onChange={(e) => setFilename(e.target.value)}
-          placeholder="Имя файла"
+          placeholder="Имя"
           className={styles.input}
         />
       </div>
 
-      <div className={styles.row}>
-        {!busy ? (
-          <button onClick={handleDownload} className={styles.button}>
-            Скачать
-          </button>
-        ) : (
-          <button onClick={handleCancel} className={`${styles.button} ${styles.cancel}`}>
-            Отмена
-          </button>
-        )}
-      </div>
+      {!busy ? (
+        <button onClick={handleDownload} className={styles.downloadBtn}>
+          ⤓ Скачать
+        </button>
+      ) : (
+        <button onClick={handleCancel} className={styles.cancelBtn}>
+          Отмена
+        </button>
+      )}
 
       {busy && lastProgress && (
         <ProgressBar
@@ -203,16 +219,22 @@ export const DownloadTab = ({ events }: DownloadTabProps) => {
       {statusText && <div className={styles.status}>{statusText}</div>}
       {error && <div className={styles.error}>{error}</div>}
 
-      {downloadError.toLowerCase().includes('bot') && (
+      {downloadError.toLowerCase().includes("bot") && (
         <div className={styles.hint}>
           <p>
-            YouTube требует подтверждения, что вы человек. Разрешите приложению читать
-            cookies вашего браузера — это одноразовое действие, настройка сохранится.
+            YouTube требует подтверждения, что вы человек. Разрешите чтение
+            cookies - это одноразовое действие, настройка сохранится.
           </p>
-          <button className={styles.button} onClick={() => enableCookies('safari')}>
-            🍪 Включить cookies из Safari
+          <button
+            className={styles.hintBtn}
+            onClick={() => enableCookies("safari")}
+          >
+            🍪 Cookies из Safari
           </button>
-          <button className={styles.button} onClick={() => enableCookies('chrome')}>
+          <button
+            className={styles.hintBtn}
+            onClick={() => enableCookies("chrome")}
+          >
             🍪 Из Chrome
           </button>
         </div>

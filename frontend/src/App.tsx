@@ -17,37 +17,42 @@ const TABS: { id: TabId; label: string }[] = [
 ];
 
 function App() {
-  const { events, connected } = useWebSocket("ws://127.0.0.1:8000/ws");
+  const { events } = useWebSocket("ws://127.0.0.1:8000/ws");
   const [active, setActive] = useState<TabId>("download");
 
   return (
-    <div className={styles.app}>
-      <header className={styles.header}>
-        <h1>Video Downloader</h1>
-        <span className={styles.status}>
-          {connected ? "● Подключено" : "○ Отключено"}
-        </span>
-      </header>
+    <>
+      <div className={styles.backdrop} aria-hidden="true">
+        <span className={`${styles.blob} ${styles.blobGreen}`} />
+        <span className={`${styles.blob} ${styles.blobPurple}`} />
+      </div>
 
-      <nav className={styles.tabs}>
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            className={`${styles.tab} ${active === t.id ? styles.active : ""}`}
-            onClick={() => setActive(t.id)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </nav>
+      <div className={styles.panel}>
+        <header className={styles.header}>
+          <div className={styles.logo}>
+            Vidrop
+          </div>
+          <nav className={styles.tabs}>
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                className={`${styles.tab} ${active === t.id ? styles.active : ""}`}
+                onClick={() => setActive(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+        </header>
 
-      <main className={styles.content}>
-        {active === "download" && <DownloadTab events={events} />}
-        {active === "queue" && <QueueTab events={events} />}
-        {active === "history" && <HistoryTab />}
-        {active === "settings" && <SettingsTab />}
-      </main>
-    </div>
+        <main className={styles.content}>
+          {active === "download" && <DownloadTab events={events} />}
+          {active === "queue" && <QueueTab events={events} />}
+          {active === "history" && <HistoryTab />}
+          {active === "settings" && <SettingsTab />}
+        </main>
+      </div>
+    </>
   );
 }
 

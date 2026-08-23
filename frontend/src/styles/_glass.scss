@@ -1,0 +1,55 @@
+@use 'variables' as *;
+
+@mixin glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.04));
+  backdrop-filter: blur($glass-blur) saturate(160%);
+  -webkit-backdrop-filter: blur($glass-blur) saturate(160%);
+  border: 1px solid $glass-border;
+  border-radius: $radius-lg;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+
+@mixin innerPanel {
+  padding: 14px 18px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: $radius-md;
+}
+
+@mixin field {
+  padding: 12px 18px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: $radius-pill;
+  color: $text;
+  font-size: 1rem;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba(74, 222, 128, 0.6);
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.15);
+  }
+}
+
+@mixin pillButton {
+  padding: 12px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: $radius-pill;
+  background: rgba(255, 255, 255, 0.1);
+  color: $text;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
